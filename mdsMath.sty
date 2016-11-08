@@ -1,0 +1,575 @@
+%%
+%% mdsMath.sty
+%%
+
+\NeedsTeXFormat{LaTeX2e}
+%%
+
+\ProvidesPackage{mdsMath}
+%%
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{amssymb}     % for math symbols
+\RequirePackage{amsthm}      % for theorem, definition, etc. environments
+\RequirePackage{bbm}         % for lowercase mathbb font
+\RequirePackage{calligra}    % cursive fonts
+\RequirePackage{forloop}     % provides the ability to execute for loops
+\RequirePackage{mathrsfs}    % nice uppercase script fonts
+\RequirePackage{mathtools}   % improved version of amsmath
+\RequirePackage{nccmath}
+%\RequirePackage{physics}     % usually use for \bra{} and \ket{}
+\RequirePackage{pifont}      % for special characters (slot notation)
+\RequirePackage{xparse}      % parses delimited arguments into list
+%%
+
+%% fixes issue with \nobreakspace and T1 font encoding
+\DeclareTextCommand{\nobreakspace}{T1}{\leavevmode\nobreak\ }
+%%
+
+%%==============================================================================
+%% Parentheses
+%%------------------------------------------------------------------------------
+\DeclarePairedDelimiterX{\rbr}[1]{(}{)}{#1}
+\DeclarePairedDelimiterX{\sbr}[1]{[}{]}{#1}
+\DeclarePairedDelimiterX{\cbr}[1]{\{}{\}}{#1}
+\DeclarePairedDelimiterX{\abr}[1]{\langle}{\rangle}{#1}
+\DeclarePairedDelimiterX{\vbr}[1]{|}{|}{#1}
+\DeclarePairedDelimiterX{\dvbr}[1]{\|}{\|}{#1}
+%%------------------------------------------------------------------------------
+%% Parentheses
+%%==============================================================================
+
+%%==============================================================================
+%% Logic
+%%------------------------------------------------------------------------------
+%%
+%% specify symbols for logical operators:
+\newcommand{\logdefsymbol}{\: :\!\iff \:}
+\newcommand{\logicaltrue}{\top}
+\newcommand{\logicalfalse}{\bot}
+\newcommand{\proves}{\vdash}
+\newcommand{\conjunctionsymbol}{\land}
+\newcommand{\disjunctionsymbol}{\lor}
+\newcommand{\excldisjuncsymbol}{\:\underline{\lor}\:}
+\newcommand{\conditionalsymbol}{\Rightarrow}
+\newcommand{\biconditionsymbol}{\Leftrightarrow}
+%%
+%% specify symbols for quantifiers "for all" and "there exists"
+\newcommand{\allquantor}{\forall}
+\newcommand{\extquantor}{\exists}
+%%
+%% logical definition
+\NewDocumentCommand{\logdef}{>{\SplitArgument{1}{:}}m}{\logdefaux#1}
+\NewDocumentCommand{\logdefaux}{mm}{%
+  \IfNoValueTF{#2}{\logdefsymbol}{#1 \logdefsymbol #2}%
+}
+%%
+%% logical unary operators
+%%
+%% negation
+\NewDocumentCommand{\ngtn}{m}{%
+  \IfNoValueTF{#1}{\neg}{\neg#1}%
+}
+%%
+%% tautological operator
+\NewDocumentCommand{\ltru}{m}{%
+  \IfNoValueTF{#1}{\logicaltrue}{\logicaltrue#1}%
+}
+%%
+%% logical false operator
+\NewDocumentCommand{\lfal}{m}{%
+  \IfNoValueTF{#1}{\logicalfalse}{\logicalfalse#1}%
+}
+%%
+%% logical binary operators
+%%
+%% conjunction (and)
+\NewDocumentCommand{\conj}{>{\SplitArgument{1}{,}}m}{\conjaux#1}
+\NewDocumentCommand{\conjaux}{mm}{%
+  \IfNoValueTF{#2}{\conjunctionsymbol}{%
+    #1 \conjunctionsymbol #2
+  }%
+}
+%%
+%% disjunction (or)
+\NewDocumentCommand{\disj}{>{\SplitArgument{1}{,}}m}{\disjaux#1}
+\NewDocumentCommand{\disjaux}{mm}{%
+  \IfNoValueTF{#2}{\disjunctionsymbol}{%
+    #1 \disjunctionsymbol #2
+  }%
+}
+%%
+%% exclusive disjunction (xor)
+\NewDocumentCommand{\xor}{>{\SplitArgument{1}{,}}m}{\xoraux#1}
+\NewDocumentCommand{\xoraux}{mm}{%
+  \IfNoValueTF{#2}{\excldisjuncsymbol}{%
+    #1 \excldisjuncsymbol #2
+  }%
+}
+%%
+%% conditional (if, then)
+\NewDocumentCommand{\cond}{>{\SplitArgument{1}{,}}m}{\condaux#1}
+\NewDocumentCommand{\condaux}{mm}{%
+  \IfNoValueTF{#2}{\conditionalsymbol}{%
+    #1 \conditionalsymbol #2
+  }%
+}
+%%
+%% biconditional (if and only if)
+\NewDocumentCommand{\bicond}{>{\SplitArgument{1}{,}}m}{\bicondaux#1}
+\NewDocumentCommand{\bicondaux}{mm}{%
+  \IfNoValueTF{#2}{\biconditionsymbol}{%
+    #1 \biconditionsymbol #2
+  }%
+}
+%%
+%% universal and existential instantiation
+%%   syntax:
+%%     (universal):
+%%       \ui{bound variable : condition}
+%%       \ui{bound variable}
+%%     (existential):
+%%       \ei{bound variable : condition}
+%%       \ei{bound variable}
+%%
+%% formats the arguments from both \ei and \ui
+\NewDocumentCommand{\loginstaux}{mm}{%
+  \IfNoValueTF{#2}{#1}{%
+    #1\rbr{#2}
+  }%
+}
+%%
+%% universal
+\NewDocumentCommand{\ui}{>{\SplitArgument{1}{:}}m}{%
+  \allquantor\loginstaux#1
+}
+%%
+%% existential
+\NewDocumentCommand{\ei}{>{\SplitArgument{1}{:}}m}{%
+  \extquantor\loginstaux#1
+}
+%%------------------------------------------------------------------------------
+%% Logic
+%%==============================================================================
+
+%%==============================================================================
+%% Set Theory
+%%------------------------------------------------------------------------------
+%%
+%% nice set notation
+%%   syntax: (list):
+%%             \set{el0, el1,\ldots, eln}
+%%           (set-builder):
+%%             \set{elements satisfying ; condition}
+\DeclarePairedDelimiterX{\set}[1]{\{}{\}}{\setargs{#1}}
+\NewDocumentCommand{\setargs}{>{\SplitArgument{1}{;}}m}{\setargsaux#1}
+\NewDocumentCommand{\setargsaux}{mm}{%
+  \IfNoValueTF{#2}{#1}{#1\,\delimsize|\,\mathopen{}#2}%
+}
+%%
+%% set union
+\NewDocumentCommand{\union}{>{\SplitArgument{1}{,}}m}{\unionargsaux#1}
+\NewDocumentCommand{\unionargsaux}{mm}{%
+  \IfNoValueTF{#2}{\cup#1}{\cup_{#2}#1}%
+}
+%%
+%% set difference
+\NewDocumentCommand{\setdiff}{>{\SplitArgument{1}{,}}m}{\setdiffaux#1}
+\NewDocumentCommand{\setdiffaux}{mm}{%
+  \IfNoValueTF{#2}{\setminus}{#1 \setminus #2}%
+}
+%%
+%% set intersection
+\NewDocumentCommand{\setint}{>{\SplitArgument{1}{,}}m}{\setintaux#1}
+\NewDocumentCommand{\setintaux}{mm}{%
+  \IfNoValueTF{#2}{\cap #1}{#1 \cap #2}%
+}
+%%
+%% cartesian product
+\NewDocumentCommand{\cartprod}{>{\SplitArgument{1}{,}}m}{\setcpraux#1}
+\NewDocumentCommand{\setcpraux}{mm}{%
+  #1 \times #2
+}
+%%
+%% function composition
+\NewDocumentCommand{\fcomp}{>{\SplitArgument{1}{,}}m}{\fcompaux#1}
+\NewDocumentCommand{\fcompaux}{mm}{%
+	#1 \circ #2
+}
+%%------------------------------------------------------------------------------
+%% Set Theory
+%%==============================================================================
+
+%%==============================================================================
+%% Vectors, Matrices, Inner Products, etc.
+%%------------------------------------------------------------------------------
+%%
+%% nice inner and dot products
+%%   syntax: \inprod{lhs_arg , rhs_arg}
+%%           \dprod{lhs_arg , rhs_arg}
+\NewDocumentCommand{\inprod}{>{\SplitArgument{1}{,}}m}{%
+  \abr{\ipargsaux#1}%
+}
+\NewDocumentCommand{\ipargsaux}{mm}{%
+  \IfNoValueTF{#2}{\slota,\slotb}{#1,#2}%
+}
+\NewDocumentCommand{\dprod}{>{\SplitArgument{1}{,}}m}{%
+  \dpargsaux#1
+}
+\NewDocumentCommand{\dpargsaux}{mm}{%
+  \IfNoValueTF{#2}{\slota\cdot\slotb}{#1\cdot#2}%
+}
+%%
+%% nice norm
+%\DeclarePairedDelimiterX{\norm}[1]{\|}{\|}{#1}
+\NewDocumentCommand{\norm}{O{\slota}}{%
+  \dvbr{#1}%
+}
+%%
+
+%%
+%% for creating nice augmented matrices
+%%   syntax: \begin{bmatrix}[cc|c]
+%%             <row1col1> & <row2col2> & ... & <row1coln> \\
+%%                                       ...
+%%             <rowmcol1> & <rowmcol2> & ... & <rowmcoln>
+%%           \end{bmatrix}
+%%
+%% change catcode of @ from 12 to 11 (11 is normal letter)
+%%   note: read \makeatletter as "make @ symbol a letter"
+\makeatletter
+%%
+%% redefine matrix environment
+\renewcommand*{\env@matrix}[1][*\c@MaxMatrixCols c]{
+  \hskip -\arraycolsep
+  \let{\@ifnextchar}{\new@ifnextchar}
+  \array{#1}
+}
+%% change catcode of @ from 11 back to 12
+%%   note: read \makeatother as "make @ symbol an 'other'"
+\makeatother
+%%
+
+%%
+%% for numbering specific equations in align* environment
+%%   syntax:
+%%     \begin{align*}
+%%       <non numbered eqn> \\
+%%       <numbered eqn> \numberthis \\
+%%     \end{align*}
+%%
+\newcommand{\numberthis}{%
+  \addtocounter{equation}{1}\tag{\theequation}%
+}
+%%
+
+%%
+%% theorem environments
+%%   \newtheorem{name}{Printed Output} defines a labelled 
+%%   enunciation that we want to look separated from the rest of
+%%   the text and with sequential numbers next to it
+%%
+%% ensures all subsequently defined \newtheorem{}{}s use the
+%% non-italicized "definition" style
+%\theoremstyle{definition}
+%%
+%%   usage:
+%%     e.g.: \newtheorem{theorem}{Theorem}[chapter]
+%%             -> ^ this goes in the preamble
+%%             -> "chapter" is the name of the section level at 
+%%                which the numbering is to take place
+%%                  -> in this case, all theorems will be
+%%                     numbered according to chapter number like
+%%                     Theorem (ch#.th#) (e.g. Thm (3.15))
+%\newtheorem{theorem}{Theorem}[chapter]
+%%
+%%   \newtheorem{corollary}[theorem]{Corollary} forces the
+%%   corollary environment to share the same counter as the
+%%   theorem environment
+%\newtheorem{corollary}[theorem]{Corollary}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{definition}[theorem]{Definition}
+%\newtheorem{notation}[theorem]{Notation}
+%%
+%%   \newtheorem*{remark}{Remark} is an unnumbered theorem-type
+%%   environment
+%\newtheorem*{remark}{Remark}
+%\newenvironment{solution}{
+%  \begin{proof}[Solution]
+%}{
+%  \end{proof}
+%}
+
+%%
+%% custom numbered axiom environment
+%%   usage:
+%%     \begin{axiom}{<NUMPREFIX>}
+%%       statement of axiom
+%%     \end{axiom}
+%\newtheorem{inneraxiom}{Axiom}
+%\newenvironment{axiom}[1]{%
+%  \let\oldinneraxiom\theinneraxiom
+%  \renewcommand\theinneraxiom{#1\oldinneraxiom}\inneraxiom
+%}{
+%  \endinneraxiom
+%}
+%%
+
+%%
+%% differential geometry
+%%
+\NewDocumentCommand{\pfwd}{m}{%
+	#1_*
+}
+%%
+
+%%
+%% sph stuff
+%%
+\NewDocumentCommand{\sphint}{>{\SplitArgument{1}{,}}m}{%
+	\sphintaux#1	
+}
+
+\NewDocumentCommand{\sphintaux}{mm}{%
+	\int_{\Omega_{\br}} {#1} \, w_h(\br-\br') \, d^{#2}\br'
+}
+%%
+
+%%
+%% math symbol macros
+%%
+%%   identity functions
+%\newcommand{\Id}{\mathrm{Id}}
+\NewDocumentCommand{\Id}{m}{%
+	\IfNoValueTF{#1}{\mathrm{Id}}{\mathrm{Id}_{#1}}%
+}
+\newcommand{\bId}{\mathbf{Id}}
+%%
+%% function inverse
+\newcommand{\inv}[1]{#1^{-1}}
+%%
+%% orthogonal complement
+\newcommand{\orthcomp}[1]{#1^{\perp}}
+%%
+%% bold greek letters
+\newcommand{\balpha}{\boldsymbol{\alpha}}
+\newcommand{\bdelta}{\boldsymbol{\delta}}
+\newcommand{\bmu}{\boldsymbol{\mu}}
+\newcommand{\bsigma}{\boldsymbol{\sigma}}
+\newcommand{\btau}{\boldsymbol{\tau}}
+\newcommand{\bomega}{\boldsymbol{\omega}}
+\newcommand{\bvarphi}{\boldsymbol{\varphi}}
+\newcommand{\bDelta}{\boldsymbol{\Delta}}
+%%
+%% bold latin letters
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bc}{\mathbf{c}}
+\newcommand{\bd}{\mathbf{d}}
+\newcommand{\be}{\mathbf{e}}
+\newcommand{\Bf}{\mathbf{f}}
+\newcommand{\bm}{\mathbf{m}}
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bp}{\mathbf{p}}
+\newcommand{\tilbp}{\tilde{\bp}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\tilbr}{\tilde{\br}}
+\newcommand{\bs}{\mathbf{s}}
+\newcommand{\bt}{\mathbf{t}}
+\newcommand{\btst}{\bt^*}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\bB}{\mathbf{B}}
+\newcommand{\bC}{\mathbf{C}}
+\newcommand{\bD}{\mathbf{D}}
+\newcommand{\bE}{\mathbf{E}}
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\bG}{\mathbf{G}}
+\newcommand{\bH}{\mathbf{H}}
+\newcommand{\bL}{\mathbf{L}}
+\newcommand{\bM}{\mathbf{M}}
+\newcommand{\bN}{\mathbf{N}}
+\newcommand{\bO}{\mathbf{O}}
+\newcommand{\bR}{\mathbf{R}}
+%%
+%% bold 0
+\newcommand{\bo}{\boldsymbol{0}}
+%%
+%% calligraphic letters
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calX}{\mathcal{X}}
+%%
+%% bold calligraphic letters
+\newcommand{\bcalT}{\boldsymbol{\calT}}
+%%
+%% math fraktur letters
+\newcommand{\frakt}{\mathfrak{t}}
+\newcommand{\frakT}{\mathfrak{T}}
+\newcommand{\affT}{A\frakT}
+\newcommand{\vecT}{V\frakT}
+%%
+%%   blackboard bold latin letters
+\newcommand{\bbb}{\mathbbm{b}}
+\newcommand{\bbm}{\mathbbm{m}}
+\newcommand{\bbr}{\mathbbm{r}}
+\newcommand{\bbs}{\mathbbm{s}}
+\newcommand{\bbt}{\mathbbm{t}}
+\newcommand{\bbC}{\mathbb{C}}
+\newcommand{\bbE}{\mathbb{E}}
+\newcommand{\bbF}{\mathbb{F}}
+\newcommand{\bbG}{\mathbb{G}}
+\newcommand{\bbH}{\mathbb{H}}
+\newcommand{\bbL}{\mathbb{L}}
+\newcommand{\bbM}{\mathbb{M}}
+\newcommand{\bbN}{\mathbb{N}}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bbT}{\mathbb{T}}
+%%
+%% affine and vector R
+\newcommand{\affR}{A\bbR}
+\newcommand{\vecR}{V\bbR}
+%%
+%% extended real line
+\newcommand{\extR}{\overline{\bbR}}
+%%
+%% nonitalicized math letters
+\newcommand{\rmc}{\mathrm{c}}
+\newcommand{\rmd}{\mathrm{d}}
+\newcommand{\rmm}{\mathrm{m}}
+\newcommand{\rms}{\mathrm{s}}
+\newcommand{\rmt}{\mathrm{t}}
+\newcommand{\rmA}{\mathrm{A}}
+\newcommand{\rmE}{\mathrm{E}}
+\newcommand{\rmL}{\mathrm{L}}
+\newcommand{\rmM}{\mathrm{M}}
+\newcommand{\rmO}{\mathrm{O}}
+\newcommand{\rmP}{\mathrm{P}}
+\newcommand{\rmQ}{\mathrm{Q}}
+\newcommand{\rmR}{\mathrm{R}}
+\newcommand{\rmS}{\mathrm{S}}
+\newcommand{\rmT}{\mathrm{T}}
+\newcommand{\rmU}{\mathrm{U}}
+\newcommand{\rmV}{\mathrm{V}}
+\newcommand{\rmW}{\mathrm{W}}
+\newcommand{\rmX}{\mathrm{X}}
+\newcommand{\rmY}{\mathrm{Y}}
+\newcommand{\rmZ}{\mathrm{Z}}
+%%
+%% sans-serif math letters
+\newcommand{\ssc}{\mathsf{c}}
+\newcommand{\ssd}{\mathsf{d}}
+\newcommand{\ssm}{\mathsf{m}}
+\newcommand{\sss}{\mathsf{s}}
+\newcommand{\sst}{\mathsf{t}}
+\newcommand{\ssA}{\mathsf{A}}
+\newcommand{\ssL}{\mathsf{L}}
+\newcommand{\ssM}{\mathsf{M}}
+\newcommand{\ssO}{\mathsf{O}}
+\newcommand{\ssP}{\mathsf{P}}
+\newcommand{\ssQ}{\mathsf{Q}}
+\newcommand{\ssR}{\mathsf{R}}
+\newcommand{\ssS}{\mathsf{S}}
+\newcommand{\ssT}{\mathsf{T}}
+\newcommand{\ssU}{\mathsf{U}}
+\newcommand{\ssV}{\mathsf{V}}
+\newcommand{\ssW}{\mathsf{W}}
+\newcommand{\ssX}{\mathsf{X}}
+\newcommand{\ssY}{\mathsf{Y}}
+\newcommand{\ssZ}{\mathsf{Z}}
+%%
+%% uppercse script letters
+\newcommand{\scrT}{\mathscr{T}}
+%%
+%% for lowercase script letters
+\newenvironment{hwrseries}{\fontfamily{calligra}\selectfont}{}
+\newcommand{\texthwr}[1]{{\hwrseries#1}}
+%\newcommand{\mathhwr}[1]{\,\text{\texthwr{#1}}\,}
+\newcommand{\mathhwr}[1]{\,{\fontsize{1.25em}{2em}\selectfont\text{\texthwr{#1}}}\,}
+%%   syntax: (text mode) \textfrc{ text }
+%%           (math mode) \mathfrc{ text }
+\newcommand{\hwP}{\mathhwr{P}}
+\newcommand{\hwp}{\mathhwr{p}}
+\newcommand{\hwq}{\mathhwr{q}}
+\newcommand{\hwr}{\mathhwr{r}}
+\newcommand{\hwt}{\mathhwr{t}}
+%%
+%% accented roman letters
+\newcommand{\tilr}{\tilde{r}}
+%%
+%% smooth and C^k function spaces
+\newcommand{\Cinf}{C^{\infty}}
+\newcommand{\Ck}{C^k}
+%%
+%% for slot notation
+\newcommand{\slota}{\,\cdot\,}
+\newcommand{\slotb}{\,\cdot\,}
+%%
+%% graph of a function
+\newcommand{\gr}{\mathsf{gr}}
+%%
+%% vector + and cdot
+\newcommand{\bpl}{\boldsymbol{+}}
+\newcommand{\bcd}{\boldsymbol{\cdot}}
+%%
+%% slot notation inner products and norms
+\newcommand{\bldprod}{\dprod{\,,\,}}
+\newcommand{\blinprod}{\inprod{\slota,\!\slotb}}
+%%
+%% divergence, gradient
+\newcommand{\bgrad}{\mathbf{grad}}
+\newcommand{\bdiv}{\mathbf{div}}
+
+%%   vector space
+\newcommand{\vecsp}[4]{(#1,#2,#3,#4)}
+\newcommand{\genvecsp}{(V,F,\bpl,\,\bcd\,)}
+\newcommand{\vecbasisfour}{\{\bb_0,\bb_1,\bb_2,\bb_3\}}
+%%   affine spaces
+\newcommand{\affsp}[3]{(#1,#2,#3)}
+\newcommand{\genaffsp}{(A,V,+)}
+\newcommand{\affbasisfour}{\{\rmO,b_0,b_1,b_2,b_3\}}
+%%   tangent spaces
+\newcommand{\tangsp}[2]{T_{#1}#2}
+%%   Galilean spacetimes
+\newcommand{\galst}[4]{(#1,#2,#3,#4)}
+\newcommand{\gengalst}{(A,V,\bt,\blinprod)}
+\newcommand{\galstcoords}{(\affR^4,\vecR^4,\bbt,\bldprod)}
+
+%%   real basis
+\newcommand{\rvecbasisfour}{\{\be_0,\be_1,\be_2,\be_2\}}
+
+%%   actions of one-forms on vectors, vice-versa
+\newcommand{\ofv}[2]{\bra{#1}\ket{#2}}
+\newcommand{\actVOF}[1]{\bra{\slota}\ket{#1}}
+\newcommand{\actOFV}[1]{\bra{#1}\ket{\slota}}
+
+%% easy tuples
+%%   syntax: \qdr{x} returns (x^0,x^1,x^2,x^3)
+\newcommand{\qdr}[1]{\left(#1^0,#1^1,#1^2,#1^3\right)}
+
+%% statistical averaging operator
+\DeclarePairedDelimiterX{\avg}[1]{\langle}{\rangle}{#1}
+
+%% counting measure
+\DeclarePairedDelimiterX{\cnt}[1]{\#(}{)}{#1}
+
+%%
+\endinput
+%% M. Sullivan. May, 2016

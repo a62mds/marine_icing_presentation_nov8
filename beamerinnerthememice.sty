@@ -1,0 +1,31 @@
+%%
+%% Beamer theme "mice" (for Marine Icing Presentations)
+%%   beamerinnerthememice.sty
+
+%%
+%%
+\mode<presentation>
+
+%%
+%% Title page layout
+\defbeamertemplate*{title page}{mice}[1][]{%
+  \begin{beamercolorbox}[wd=12.8cm,#1]{title page header}
+    \begin{center}
+      \usebeamerfont{title}\textbf{\inserttitle}\par
+    \end{center}
+  \end{beamercolorbox}
+  \begin{beamercolorbox}[wd=12.8cm,#1]{author}
+    \begin{center}
+      \usebeamerfont{author}\insertauthor
+    \end{center}
+  \end{beamercolorbox}
+ %    \vskip0.2cm%
+ %   \begin{beamercolorbox}[wd=12cm,leftskip=3cm,#1]{date}
+ %     \usebeamerfont{author}\insertdate%
+ %   \end{beamercolorbox}
+  \vfill
+}
+
+%%
+\mode<all>
+%% M. Sullivan. June, 2016

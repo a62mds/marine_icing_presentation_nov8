@@ -1,0 +1,76 @@
+%% mdsTikz.sty
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mdsTikz}
+
+\RequirePackage{mdsColors}
+\RequirePackage{mdsMath}
+\RequirePackage{standalone}
+\RequirePackage{tikz}
+\RequirePackage{tikz-3dplot}
+  \usetikzlibrary{3d}
+  \usetikzlibrary{fit}
+\RequirePackage{pgfmath}
+\RequirePackage{pgfplots}
+  \pgfplotsset{compat=1.13}
+
+%%
+%% flow charts
+%%
+\usetikzlibrary{arrows}
+\usetikzlibrary{shapes.geometric}
+%%
+\tikzstyle{startstop}=[
+  rectangle,
+  rounded corners,
+  minimum width=3cm,
+  minimum height=1cm,
+  text centered,
+  draw=munGrey!50,
+  fill=munRed,
+  text width=3cm
+]
+\tikzstyle{io}=[
+  trapezium,
+  trapezium left angle=70,
+  trapezium right angle=110,
+  minimum width=3cm,
+  minimum height=1cm,
+  text centered,
+  draw=\halfgrey,
+  fill=\bkcolor,
+  text width=3cm
+]
+\tikzstyle{process}=[
+  rectangle,
+  rounded corners,
+  minimum width=3cm,
+  minimum height=1cm,
+  text centered,
+  draw=\halfgrey,
+  fill=black,
+  text width=3cm
+]
+\tikzstyle{decision}=[
+  diamond,
+  minimum width=3cm,
+  minimum height=1cm,
+  text centered,
+  draw=\halfgrey,
+  fill=MUN_Red,
+  text width=3cm
+]
+\tikzstyle{arrow}=[
+  thick,
+  ->,
+  >=stealth
+]
+
+%%
+%% commutative diagrams
+%%
+\usetikzlibrary{cd}
+
+%%
+\endinput
+%% M. Sullivan. May, 2016

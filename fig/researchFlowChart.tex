@@ -1,0 +1,21 @@
+%%% researchFlowChart.tex
+\documentclass{standalone}
+\usepackage{mdsTikz}
+\begin{document}
+  \begin{tikzpicture}[node distance=2cm,scale=0.25] % 2cm on-center spacing
+    % nodes
+    \node (start) [startstop] {method};
+    \node (code) [process,right of=start,xshift=2cm] {software};
+    \node (exp) [process,right of=code,xshift=2cm] {experiments};
+    \node (test) [decision,below of=exp,yshift=-1cm] {validation};
+    \node (modcode) [process,left of=test,xshift=-6cm] {rethink};
+    \node (stop) [startstop,below of=test,yshift=-1cm,xshift=-4cm] {finish};
+    % arrows
+    \draw [arrow] (start) -- (code);
+    \draw [arrow] (code) -- (exp);
+    \draw [arrow] (exp) -- (test);
+    \draw [arrow] (test) |- node[anchor=north east] {agreement} (stop);
+    \draw [arrow] (test) -- node[anchor=north] {no agreement} (modcode);
+    \draw [arrow] (modcode) -- (start);
+  \end{tikzpicture}
+\end{document}

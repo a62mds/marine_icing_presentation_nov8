@@ -1,0 +1,20 @@
+%%% sphDomainDisc1.tex
+\documentclass{standalone}
+\usepackage{mdsTikz}	
+\begin{document}
+  \begin{tikzpicture}[scale=0.5]
+    % Draw grid on fluid domain
+    \foreach \x in {-7,-6,...,0}
+      \draw[dashed,MUN_Grey] (-8,\x) -- (6,\x);
+    \foreach \y in {-7,-6,...,5}
+      \draw[dashed,MUN_Grey] (\y,-8) -- (\y,1);
+    % Shade fluid domain
+	\fill[fill=\halfgrey,draw=\halfgrey,opacity=0.7]
+      (-8,-8) rectangle (6,1) 
+      node[below left,black] {$\Omega \subseteq \mathbb{E}^2$};
+    % SPH particle locations
+    \foreach \y in {-7,-6,...,0}
+      \foreach \x in {-7,-6,...,5}
+        \fill[fill=MUN_Red,draw=black] (3pt+\x cm,\y cm) arc (0:360:3pt);
+  \end{tikzpicture}
+\end{document}

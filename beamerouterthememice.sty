@@ -1,0 +1,28 @@
+%%
+%% Beamer theme "mice" (for Marine Icing Presentations)
+%%   beamerouterthememice.sty
+
+%%
+%%
+\mode<presentation>
+
+%%
+%% Frame title
+\defbeamertemplate*{frametitle}{mice}[1][]{%
+  \vskip.75cm%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=1cm]{frametitle}
+    \begin{tikzpicture}
+      \useasboundingbox (0,0) rectangle (\the\paperwidth,1.2cm);
+      \ifx\insertframetitle\@empty{%
+        \node[anchor=west,munGrey,font=\Large] at (.75,0.61) {\textbf{\insertframetitle}};%
+      }\else{%
+        \node[anchor=west,munGrey,font=\Large] at (.75,0.85) {\textbf{\insertframetitle}};%
+        \node[anchor=west,munGrey,font=\large] at (.75,0.35) {\insertframesubtitle};%
+      }\fi
+    \end{tikzpicture}
+  \end{beamercolorbox}
+}
+
+%%
+\mode<all>
+%% M. Sullivan. June, 2016

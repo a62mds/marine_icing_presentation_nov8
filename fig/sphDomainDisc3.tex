@@ -1,0 +1,23 @@
+%%% sphDomainDisc3.tex
+\documentclass{standalone}
+\usepackage{mdsTikz}	
+\begin{document}
+  \begin{tikzpicture}[scale=0.5]
+    % Shade fluid domain
+	\fill[fill=\halfgrey,draw=\halfgrey,opacity=0.7]
+      (-8,-8) rectangle (6,1) 
+      node[below left,black] {$\Omega \subseteq \mathbb{E}^2$};
+    % SPH particle locations
+    \foreach \y in {-7,-6,...,0}
+      \foreach \x in {-7,-6,...,5}
+        \fill[fill=\halfred,draw=black!50] (3pt+\x cm,\y cm) arc (0:360:3pt);
+    % Support domain of particle a
+    \fill[fill=MUN_Red,draw=MUN_Grey,opacity=0.4]
+      (3cm-1cm,-4cm) arc (0:360:3cm) 
+      node[right,black] {$\Omega_a$};
+    % SPH particle a location
+    \fill[fill=MUN_Red,draw=black]
+      (3pt-1cm,-4cm) arc (0:360:3pt) 
+      node[below right,MUN_Red,xshift=-.25em,yshift=.25em,\halfred] {$a$};
+  \end{tikzpicture}
+\end{document}

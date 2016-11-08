@@ -1,0 +1,96 @@
+%%
+%% fig-marine_icing_process.tex
+\documentclass[tikz]{standalone}
+\usepackage{mdsTikz}
+  \usetikzlibrary{decorations.pathmorphing,shapes}
+%%
+\begin{document}
+  \begin{tikzpicture}
+    %%
+    %% define parameters
+    %%   boundaries of picture
+    \pgfmathsetmacro{\xmin}{0}
+    \pgfmathsetmacro{\xmax}{9.6}
+    \pgfmathsetmacro{\ymin}{0}
+    \pgfmathsetmacro{\ymax}{5.4}
+    \pgfmathsetmacro{\width}{\xmax-\xmin}
+    \pgfmathsetmacro{\height}{\ymax-\ymin}
+    %%   sections
+    \pgfmathsetmacro{\numSecs}{3}
+    \pgfmathsetmacro{\secWidth}{\width/\numSecs}
+    %%   section titles
+    \pgfmathsetmacro{\titleHeight}{0.8}
+    \pgfmathsetmacro{\titley}{\ymin+(\ymax-0.5*\titleHeight)}
+    \pgfmathsetmacro{\sprayGenx}{\secWidth/2.0}
+    \pgfmathsetmacro{\sprayTransx}{\sprayGenx+\secWidth}
+    %%   dividing lines
+    \pgfmathsetmacro{\leftLinex}{\secWidth}
+    \pgfmathsetmacro{\rightLinex}{\secWidth+\secWidth}
+    %%   figures
+    \pgfmathsetmacro{\figMargin}{0.2}
+    \pgfmathsetmacro{\figWidth}{\secWidth-2.0*\figMargin}
+    \pgfmathsetmacro{\figHeight}{\ymax-\titleHeight-2*\figMargin}
+    
+    %%
+    %% define bounding box
+    \coordinate (bottomLeft) at (\xmin,\ymin);
+    \coordinate (topRight) at (\xmax,\ymax);
+    \useasboundingbox (bottomLeft) rectangle (topRight);
+    %%
+    
+    %%
+    %% Spray generation section
+    %%   section title
+    \coordinate (sprayGenTitle) at (\sprayGenx,\titley);
+    \node[munRed] at (sprayGenTitle) {Spray Generation};
+    %%   draw ``ship''
+    \draw[line width=2mm,line cap=round,munGrey!50] (3.0,0.4) -- (1.9,2.5) -- (3.0,2.5);
+    %%   draw ``spray''
+    \draw[line width=2mm,line cap=round,waterBlue!50,dotted,dash pattern=on 0pt off 1.25\pgflinewidth] (1.7,2.5) -- (0.6,4.6);
+    \draw[line width=1mm,line cap=round,waterBlue!50,dotted,dash pattern=on 0pt off 2\pgflinewidth] (1.3,3.0) -- (0.3,4.3);
+    \draw[line width=1mm,line cap=round,waterBlue!50,dotted,dash pattern=on 0pt off 2\pgflinewidth] (1.525,3.125) -- (1.0,4.7);
+    %%   draw ``wave''
+    \draw[line width=2mm,line cap=round,waterBlue!50] plot [smooth] coordinates {
+      (1.7,2.5) (2.2,1.4) (1.9,0.4) (1.1,0.7) (0.6,1.4) (0.1,0.7)
+    };
+    %%   draw boundary line
+    \coordinate (leftLineBottom) at (\leftLinex,\ymin);
+    \coordinate (leftLineTop) at (\leftLinex,\ymax);
+    \draw[draw=lightGrey] (leftLineBottom) -- (leftLineTop);
+    %%
+    
+    %%
+    %% Spray transport section
+    %%   section title
+    \coordinate (sprayTransTitle) at (\sprayTransx,\titley);
+    \node[munRed] at (sprayTransTitle) {Spray Transport};
+    %%   draw ``ship''
+    \draw[line width=2mm,line cap=round,munGrey!50] (4.7,0.4) -- (4.2,1.3) -- (6.2,1.3);
+    %%   draw spray droplets
+    \draw[line width=2mm,line cap=round,waterBlue!50,dotted,dash pattern=on 0pt off 1.25\pgflinewidth] (4.0,1.3) to[out=120,in=130,distance=2cm] (6.0,2.3);
+    \draw[line width=1mm,line cap=round,waterBlue!50,dotted,dash pattern=on 0pt off 2\pgflinewidth] (3.7,1.6) to[out=120,in=150,distance=2cm] (6.0,4);
+    %%   draw ``wind''
+    \foreach \y in {2,3,4} {
+      \path[draw,->,decorate,decoration={snake,amplitude=.5mm},opacity=0.5,munGrey!50,thick] (3.4,\y) -- (6.3,\y);
+    }
+    %%   draw boundary line
+    \coordinate (rightLineBottom) at (\rightLinex,\ymin);
+    \coordinate (rightLineTop) at (\rightLinex,\ymax);
+    \draw[draw=lightGrey] (rightLineBottom) -- (rightLineTop);
+    %%
+    
+    %%
+    %% Spray freezing section
+    \node[munRed] at (8,5) {Spray Freezing};
+    %%   draw surface
+    \draw[line width=2mm,line cap=round,munGrey!50] (9.2,0.4) -- (9.2,4.5);
+    %%   draw water
+    \fill[waterBlue!50] (6.8,0.4) rectangle (8.0,4.5);
+    %%   draw ice surface
+    \path[draw,decorate,decoration={zigzag,amplitude=0.25mm},white,very thick] (8,0.4) -- (8,4.5);
+    %%   draw film surface
+    \path[draw,decorate,decoration={zigzag,amplitude=0.25mm},waterBlue!50,very thick] (6.8,0.4) -- (6.8,4.5);
+    %%
+  \end{tikzpicture}
+\end{document}
+%% M. Sullivan. June, 2016

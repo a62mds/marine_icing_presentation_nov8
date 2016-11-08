@@ -1,0 +1,46 @@
+%%
+%% Preamble for Marine Icing Research Group presentations
+%%
+\ProvidesPackage{micePreamble}
+
+%%
+%% Requirements
+\NeedsTeXFormat{LaTeX2e}
+%%
+\RequirePackage{animate}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{fontspec}
+\RequirePackage{mdsColors}
+\RequirePackage{mdsMath}
+\RequirePackage{mdsTikz}
+\RequirePackage{multicol}
+\RequirePackage{standalone}
+
+%%
+%% Settings
+\usetheme{mice}                             % use marine icing beamer theme
+\setbeamertemplate{navigation symbols}{}    % removes navigation buttons from slides%%
+
+
+%%
+%% Title page information
+\title{SPH Modeling of Breakup Phenomena}
+\subtitle{with applications to wave-spray generation}
+\author{M.~Sullivan}
+\institute[Memorial University of Newfoundland]{
+  Marine Icing Research Group \\
+  Memorial University of Newfoundland
+}
+\date{April 4, 2016}
+\subject{sph modeling of breakup phenomena}
+%%
+
+%%
+%% if macro hasn't been defined, define it; if it has been defined, redefine it
+\NewDocumentCommand{\forcecommand}{mm}{%
+  \providecommand{#1}{#2}%
+  \renewcommand{#1}{#2}%
+}
+%%
+\endinput
+%% M. Sullivan. June, 2016

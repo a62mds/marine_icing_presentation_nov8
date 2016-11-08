@@ -1,0 +1,36 @@
+%%
+%% tableofcontents.tex
+
+%%
+%% set slides background (remove engineering logo)
+%%   -> for comments, see titlepage.tex (pretty much boilerplate)
+\setbeamertemplate{background}{%
+  \begin{tikzpicture}
+    \pgfmathsetmacro{\leftlinebnd}{1}
+    \pgfmathsetmacro{\lineheight}{1}
+    \pgfmathsetmacro{\logowidth}{1.5}
+    \pgfmathsetmacro{\munlogox}{12.8-\logowidth}
+    \pgfmathsetmacro{\munlogoy}{1}
+    \pgfmathsetmacro{\rightlinebnd}{\munlogox-1}
+    \pgfmathsetmacro{\themiddlex}{6.4}
+    \pgfmathsetmacro{\headerposy}{8.2}
+    %%
+    \coordinate (bottomleft) at (0,0);
+    \coordinate (topright) at (\the\paperwidth,\the\paperheight);
+    \useasboundingbox (bottomleft) rectangle (topright);
+    \coordinate (leftLinePt) at (\leftlinebnd,\lineheight);
+    \coordinate (rightLinePt) at (\rightlinebnd,\lineheight);
+    \coordinate (munLogo) at (\munlogox,\munlogoy);
+    \coordinate (header) at (\themiddlex,\headerposy);
+    \draw[munRed,thick] (leftLinePt) -- (rightLinePt);
+    \node at (munLogo) {\includegraphics[width=1.5cm]{img/MUN_Logo_RGB.png}};
+  \end{tikzpicture}
+}
+
+%%
+%% the table of contents
+\begin{frame}[t]{Overview}
+  \vspace*{-\baselineskip}
+  \tableofcontents
+\end{frame}
+%% M. Sullivan. June, 2016

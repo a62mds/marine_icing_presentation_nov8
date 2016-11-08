@@ -1,0 +1,54 @@
+%%% SPHsmoothingKernel.tex
+\documentclass{standalone}
+\usepackage{mdsTikz}
+\begin{document}
+  \pgfmathdeclarefunction{smoothingKernel}{2}{%
+    \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
+  }
+  \tdplotsetmaincoords{110}{110}
+  \begin{tikzpicture}[tdplot_main_coords, scale = .5]
+	% Draw grid
+    \foreach \x in {-8,-7,...,1}
+      \draw[dashed,MUN_Grey] (-8,\x,0) -- (6,\x,0);
+    \foreach \y in {-8,-7,...,6}
+      \draw[dashed,MUN_Grey] (\y,-8,0) -- (\y,1,0);
+    % Draw SPH particles
+    \begin{scope}[canvas is yx plane at z=0]
+      \fill[fill=\halfgrey, draw=\halfgrey, opacity=0.7] 
+        (-8,-8) rectangle (1,6) 
+        node[right,\halfgrey] {$\Omega \subseteq \mathbb{E}^2$};
+      % Draw origin
+      \fill[fill=black] 
+        (3pt,3pt-6.5cm) arc (0:360:3pt) 
+        node[below,\halfgrey] {$\text{O}$};
+      % Support domain of particle a
+      \fill[fill=MUN_Red, draw=MUN_Grey, opacity=0.4] 
+        (-0.5,0) arc (0:360:3cm) 
+        node[left,xshift=-2.5cm,black] {$\Omega_{\br}$};
+      % Position r_a
+      \draw[black,->] (0,3pt-6.5cm) -- (3pt-3.5cm,0);
+      \fill[fill=MUN_Red,draw=black]
+        (3pt-3.5cm,0) arc (0:360:3pt) 
+        node[below,black] {$\mathbf{r}$};
+      % Support domain radius
+      \draw[black,->,opacity=0.7] 
+        (-3.5,0) -- (2.12132-3.5,2.12132) 
+        node[below,black] {$\kappa h$};
+    \end{scope}
+    % Draw wh-axes
+    \draw[->] (0,-3.5,0) -- (0,-3.5,5.5) node[left,\halfgrey]{$w_h(\mathbf{r})$};
+    % Draw w_h(r_a)
+    \begin{scope}[canvas is yz plane at x=0]
+      \begin{axis}[no markers, clip=false,
+                   xshift=-7.1cm, yshift=-.5cm,
+                   width=8.75cm,
+                   axis y line=none, axis x line=none,
+                   domain=-1.5:1.5, samples=100,
+                   xtick=\empty, ytick=\empty
+                  ]
+        \addplot[color=MUN_Red,very thick] {smoothingKernel(0,0.5)};
+      \end{axis}
+    \end{scope}
+  \end{tikzpicture}
+\end{document}
+

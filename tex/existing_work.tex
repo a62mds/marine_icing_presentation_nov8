@@ -1,0 +1,59 @@
+%%
+%% background_and_motivation.tex
+\forcecommand{\thesec}{Existing Work}
+%%
+
+%%
+%% what's interesting about it? what has been solved, what has
+%% yet to be solved?
+\forcecommand{\thesubsec}{Current Wave Spray Simulation Research}
+%%
+\begin{frame}{\thesec}{\thesubsec}
+  \vspace*{-2\baselineskip}
+  \begin{itemize}
+    \item{
+      difficult to find!
+    }
+    \vspace*{3\baselineskip}
+    \item{
+      from conference paper \cite{Shipilova12} (Shipilova and Kulyakhtin, 2012):
+      \begin{itemize}
+        \item{
+          [Combines] CFD simulations of the flow around the hull with a statistical approach to estimate the characteristic size of water droplets composing spray.
+        }
+      \end{itemize}
+    } 
+  \end{itemize}
+\end{frame}
+
+%%
+%% challenges:
+\begin{frame}{\thesec}{Numerical Challenges}
+  \vspace*{-2\baselineskip}
+  \begin{block}{Major modeling challenges:}
+    \begin{itemize}
+      \item{ large variation in length scales:
+	      \begin{itemize}
+	        \item{
+			  wave-superstructure interactions: $\sim \text{1}$ to $\text{10}$ m
+		    }
+		    \item{
+			  spray droplets can have diameters as small as $\sim \text{10}^{-\text{5}}$ m
+			}
+		  \end{itemize}
+	  }
+	  \item{ large variation in time scales:
+	    \begin{itemize}
+	      \item{ wave-superstructure interactions: $\sim \text{1}$ s }
+		  \item{ droplet formation processes occur much faster }
+		\end{itemize}
+	  }
+	\end{itemize}
+  \end{block}
+  \vspace*{-\baselineskip}
+  \begin{block}{from Weymouth et.~al., 2006:}
+	\begin{quote}
+	  ...a single simulation which hopes to resolve these phenomena would be a monumental undertaking and could not be completed within the first half of this century.
+	\end{quote}
+  \end{block}
+\end{frame}
